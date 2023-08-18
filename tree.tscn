@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5hl8o5xst37a"]
+
+[ext_resource type="Script" path="res://tree.gd" id="1_jyg8u"]
+[ext_resource type="Texture2D" uid="uid://cpsecrr4s2w84" path="res://assets/trees/tree1-age0.png" id="2_5bh04"]
+[ext_resource type="PackedScene" uid="uid://cbcrx217tpkkq" path="res://scaner.tscn" id="2_cggik"]
+
+[node name="tree" type="Node2D"]
+script = ExtResource("1_jyg8u")
+
+[node name="scaner" parent="." instance=ExtResource("2_cggik")]
+
+[node name="tree_sprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+texture = ExtResource("2_5bh04")

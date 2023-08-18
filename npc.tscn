@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx3gpj16oi0op"]
+
+[ext_resource type="Texture2D" uid="uid://dkjs3xg73vkpp" path="res://assets/npc/npc-f.png" id="1_6dcfb"]
+[ext_resource type="Script" path="res://npc_body.gd" id="2_nbvgd"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nnhog"]
+radius = 6.0
+
+[node name="npc" type="Node2D"]
+
+[node name="npc_body" type="CharacterBody2D" parent="."]
+script = ExtResource("2_nbvgd")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="npc_body"]
+avoidance_enabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="npc_body"]
+texture_filter = 1
+texture = ExtResource("1_6dcfb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="npc_body"]
+position = Vector2(1, 1)
+shape = SubResource("CapsuleShape2D_nnhog")
+
+[connection signal="velocity_computed" from="npc_body/NavigationAgent2D" to="npc_body" method="_on_navigation_agent_2d_velocity_computed"]
