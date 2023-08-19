@@ -1,6 +1,9 @@
 extends Node2D
+var grow_speed = 1 # secs to grow
 @export var age = 0
 @onready var spr = get_node("tree_sprite")
+
+var cells = []
 var txts = [
 	preload("res://assets/trees/tree1-age0.png"),
 	preload("res://assets/trees/tree1-age1.png"),
@@ -11,23 +14,25 @@ var txts = [
 @onready var world = get_parent()
 @onready var start_time = world.seconds
 
-@onready var view = get_node("Area2D/view")
+@onready var scanner = get_node("scaner") 
+#@onready var sc = self.
 
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready():
 	choose_sprite()
 	
-	#=====Stats====
+
 	pass
 	
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if world.seconds -start_time >=10:
+	if world.seconds -start_time >= grow_speed:
 		age+=1
 		start_time = world.seconds
 		choose_sprite()
+		if age >= 4:
+			multiply()
 
 
 	
@@ -37,15 +42,24 @@ func choose_sprite():
 		spr.set_texture(txts[age])
 
 
-		
-func _on_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
-	print("IAMTREEEE", body_rid, body, body_shape_index, local_shape_index)
+func multiply():
+	scanner.scan()
+	var cur_cell=scanner.grnd.map_to_local(position)
+	
+	scanner.grnd.set_cell(0,cur_cell,0,Vector2(1,0))
+	
+	var next_cell = Vector2(randi_range(-3,3), randi_range(-3,3))
+	var cell = scanner.grnd.get_cell_tile_data(0, next_cell)
+	
+	if cell!= null and cell.get_custom_data("plantable"):
+		var scene = load("res://tree.tscn")
+		var inst = scene.instantiate()
+		#var inst = self.duplicate()
+		inst.position = scanner.grnd.map_to_local(next_cell)	
 
-
+		scanner.grnd.set_cell(0,next_cell,0,Vector2(1,0))				
+		world.add_child(inst)
+	
+		return
 
 	
-
-
-func _on_tree_entered(body):
-	print(body)
-	pass # Replace with function body.
